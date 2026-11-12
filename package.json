@@ -1,0 +1,23 @@
+{
+  "name": "social-content-automation",
+  "version": "0.13.0",
+  "private": true,
+  "description": "本地内容工作台：Dashboard（AI 营销智能体）/ Strategy（含 GSC 真接入）/ Planning / Content / Report（零依赖）",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "seed": "node scripts/seed.js",
+    "test": "node tests/rules.test.js && node tests/migrate.test.js && node tests/agent.test.js && node tests/strategy.test.js && node tests/content.test.js && node tests/article.test.js && node tests/social-post.test.js",
+    "verify:ui": "node scripts/shot.js",
+    "verify:flow": "node scripts/ui-flow.js",
+    "verify:dash": "node scripts/ui-dash.js",
+    "verify:strategy": "node scripts/ui-strategy.js",
+    "verify:all": "node tests/rules.test.js && node tests/migrate.test.js && node tests/agent.test.js && node tests/strategy.test.js && node tests/content.test.js && node tests/article.test.js && node tests/social-post.test.js && node scripts/ui-flow.js && node scripts/ui-dash.js && node scripts/ui-strategy.js && node scripts/ui-content.js && node scripts/ui-article.js && node scripts/ui-social-post.js && node scripts/shot.js",
+    "verify:content": "node scripts/ui-content.js",
+    "verify:article": "node scripts/ui-article.js",
+    "verify:socialpost": "node scripts/ui-social-post.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

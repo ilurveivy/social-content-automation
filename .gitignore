@@ -1,0 +1,30 @@
+# 依赖
+node_modules/
+
+# 验收截图（每次重跑都会变，不进版本库）
+_shots/
+
+# 数据文件的自动备份 / 临时日志
+data/*.bak
+logs-*.txt
+*.bak-*
+_shot.log
+
+# AI Visibility 生成物（扫描记录 + 聚合结果，随时可重跑）
+data/visibility/runs/
+public/data/visibility/
+# Buffer 凭据（绝对不进版本库）
+data/buffer-tokens.json
+data/buffer-pkce.json
+data/buffer-tokens.json.bak
+# 社媒素材先落本地（Buffer 抓不到本机地址，见 README）
+data/media/
+# 测试专用数据目录（SCA_DATA_DIR 指向这里）
+data-test*/
+# LLM 供应商配置里有真 apiKey，绝不能进版本库（本机自己留着就行）
+data/providers.json
+# 临时截图
+_shot-*.png
+# 运行时个人数据：公司知识 / 对话记录（公开仓库不带，本地跑起来会自动生成）
+data/knowledge.json
+data/chats.json

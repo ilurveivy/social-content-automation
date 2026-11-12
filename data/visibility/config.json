@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "note": "AI 可见度扫描配置。改这里 = 改追踪范围。改完先跑 scan 再跑 report。",
+  "brand": {
+    "name": "eSheep.ai",
+    "domain": "esheep.ai",
+    "aliases": ["eSheep.ai", "esheep.ai", "esheep", "eSheep"]
+  },
+  "competitors": [
+    { "key": "hootsuite", "name": "Hootsuite", "domain": "hootsuite.com", "aliases": ["Hootsuite"] },
+    { "key": "buffer", "name": "Buffer", "domain": "buffer.com", "aliases": ["Buffer"] },
+    { "key": "publer", "name": "Publer", "domain": "publer.com", "aliases": ["Publer"] },
+    { "key": "metricool", "name": "Metricool", "domain": "metricool.com", "aliases": ["Metricool"] },
+    { "key": "typefully", "name": "Typefully", "domain": "typefully.com", "aliases": ["Typefully"] },
+    { "key": "predis", "name": "Predis.ai", "domain": "predis.ai", "aliases": ["Predis.ai", "Predis"] }
+  ],
+  "prompts": [
+    { "id": "p01", "stage": "Awareness", "addedAt": "2 months ago", "text": "what is multi-channel content adaptation" },
+    { "id": "p02", "stage": "Awareness", "addedAt": "1 month ago", "text": "how do brands keep one voice across platforms" },
+    { "id": "p03", "stage": "Awareness", "addedAt": "1 month ago", "text": "why does the same post flop on different channels" },
+    { "id": "p04", "stage": "Consideration", "addedAt": "3 weeks ago", "text": "best multi-channel content repurposing tool" },
+    { "id": "p05", "stage": "Consideration", "addedAt": "3 weeks ago", "text": "AI tool that adapts copy per platform" },
+    { "id": "p06", "stage": "Consideration", "addedAt": "2 weeks ago", "text": "how to repurpose one blog post into ten social posts" },
+    { "id": "p07", "stage": "Consideration", "addedAt": "2 weeks ago", "text": "content workflow for small marketing teams" },
+    { "id": "p08", "stage": "Decision", "addedAt": "10 days ago", "text": "hootsuite vs buffer vs community tools" },
+    { "id": "p09", "stage": "Decision", "addedAt": "8 days ago", "text": "cheapest tool to schedule ten channels" },
+    { "id": "p10", "stage": "Decision", "addedAt": "6 days ago", "text": "which tool exports to Google Search Console" },
+    { "id": "p11", "stage": "Brand evaluation", "addedAt": "5 days ago", "text": "is eSheep.ai worth it" },
+    { "id": "p12", "stage": "Brand evaluation", "addedAt": "3 days ago", "text": "eSheep.ai reviews and pricing" }
+  ],
+  "scan": {
+    "runsPerPrompt": 3,
+    "temperature": 0.4,
+    "maxTokens": 3000,
+    "timeoutMs": 120000,
+    "providerId": null,
+    "system": "Answer the user's question the way you normally would, as a helpful assistant. Give concrete recommendations when the question asks for tools or products, and include links where you would normally cite a source. Do not ask clarifying questions - just answer."
+  }
+}

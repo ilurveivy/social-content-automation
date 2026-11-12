@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "clientId": "",
+  "clientSecret": "",
+  "state": "",
+  "token": {
+    "access_token": "",
+    "refresh_token": "",
+    "expiresAt": 0,
+    "scope": "",
+    "token_type": ""
+  },
+  "account": "",
+  "sites": [],
+  "site": "",
+  "lastSync": null,
+  "lastError": null,
+  "source": ""
+}

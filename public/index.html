@@ -1,0 +1,1359 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Social Content Automation</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232f6bff'/%3E%3Ctext x='16' y='21' font-size='11' font-family='monospace' fill='white' text-anchor='middle'%3ESCA%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+
+<header class="appbar">
+  <div class="appbar-left">
+    <div class="logo" aria-hidden="true">SCA</div>
+    <nav class="topnav" id="topnav" aria-label="板块">
+      <button class="nav-item is-active" data-view="dashboard">Dashboard</button>
+      <button class="nav-item" data-view="strategy">Strategy</button>
+      <button class="nav-item" data-view="planning">Planning</button>
+      <button class="nav-item" data-view="content">Content</button>
+      <button class="nav-item" data-view="report">Report</button>
+    </nav>
+  </div>
+  <div class="appbar-right">
+    <span id="modeBadge" class="mode-chip" title="生成模式">…</span>
+    <button id="btnExportMd" class="btn btn-small">导出 MD</button>
+    <button id="btnExportCsv" class="btn btn-ghost btn-small">CSV</button>
+    <button id="btnProviders" class="btn btn-primary btn-small">接入模型</button>
+    <button id="btnSettings" class="btn btn-icon" title="设置" aria-label="设置">
+      <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6">
+        <circle cx="10" cy="10" r="2.6"/><path d="M10 3.2v1.4M10 15.4v1.4M16.8 10h-1.4M4.6 10H3.2M14.8 5.2l-1 1M6.2 13.8l-1 1M14.8 14.8l-1-1M6.2 6.2l-1-1"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<!-- ==================== DASHBOARD ==================== -->
+<main class="page" id="view-dashboard">
+  <div class="dash-shell">
+
+    <div class="dash-main">
+      <header class="dash-head">
+        <h1>Set up your marketing agent</h1>
+        <p class="dash-sub">Teach it about your business once. Every plan, brief and draft after that is grounded in what it already knows — instead of a blank prompt.</p>
+        <div id="readyRow" class="ready-row"></div>
+      </header>
+
+      <!-- 四张配置卡：一行四列 -->
+      <section class="setup-cards" id="setupCards" aria-label="配置 agent">
+
+        <article class="setup-card" data-panel="company">
+          <span class="sc-icon">
+            <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6">
+              <path d="M3 7.5 10 3.5l7 4v8.5H3z"/><path d="M7.5 16V10h5v6"/>
+            </svg>
+          </span>
+          <h3>Company knowledge</h3>
+          <p>Your business, audience, competitors, and what makes your brand different.</p>
+          <div class="sc-foot">
+            <button class="btn btn-primary btn-small" data-open="company" id="btnStartSetup">Start setup</button>
+            <span class="sc-meta" id="knProgress">0 of 7 complete</span>
+          </div>
+        </article>
+
+        <article class="setup-card" data-panel="gsc">
+          <span class="sc-icon">
+            <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6">
+              <circle cx="9" cy="9" r="5.2"/><path d="M13 13l4 4"/>
+            </svg>
+          </span>
+          <h3>Google Search Console</h3>
+          <p>What brings visitors to your website, and where you're missing opportunities.</p>
+          <div class="sc-foot">
+            <button class="btn btn-small" data-open="gsc" id="btnConnectGscCard">Connect</button>
+            <span class="sc-credit" id="gscCredits" title="对齐参考产品的标签；本地版没有积分系统">+2k AI credits</span>
+          </div>
+        </article>
+
+        <article class="setup-card" data-panel="tools">
+          <span class="sc-icon">
+            <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6">
+              <rect x="3" y="3" width="6" height="6" rx="1.6"/><rect x="11" y="3" width="6" height="6" rx="1.6"/>
+              <rect x="3" y="11" width="6" height="6" rx="1.6"/><rect x="11" y="11" width="6" height="6" rx="1.6"/>
+            </svg>
+          </span>
+          <h3>Connect your tools</h3>
+          <p>Information and actions from the tools your team already uses.</p>
+          <div class="sc-foot">
+            <button class="btn btn-small" data-open="tools" id="btnExploreTools">Explore</button>
+            <span class="sc-meta" id="toolsMeta">8 available</span>
+          </div>
+        </article>
+
+        <article class="setup-card" data-panel="files">
+          <span class="sc-icon">
+            <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6">
+              <path d="M5 3.5h6l4 4V16a.5.5 0 0 1-.5.5h-9.5A.5.5 0 0 1 4.5 16V4a.5.5 0 0 1 .5-.5z"/>
+              <path d="M11 3.7V8h4"/>
+            </svg>
+          </span>
+          <h3>Knowledge files</h3>
+          <p>Internal product details, pricing, and research your agent can't find online.</p>
+          <div class="sc-foot">
+            <button class="btn btn-small" id="btnUploadFiles" data-open="files">Upload</button>
+            <span class="sc-meta" id="filesMeta">0 files</span>
+          </div>
+        </article>
+
+      </section>
+
+      <!-- 详情面板：四块的完整表单都在这儿（点卡片展开） -->
+      <section class="setup-panel hidden" id="setupPanel">
+        <div class="sp-head">
+          <button id="btnBackSetup" class="btn btn-icon btn-quiet" aria-label="返回">
+            <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4l-6 6 6 6"/></svg>
+          </button>
+          <div class="grow">
+            <h2 id="spTitle">—</h2>
+            <p class="muted small" id="spSub"></p>
+          </div>
+          <span id="spPill" class="pill pill-neutral">—</span>
+        </div>
+
+        <div class="sp-body" id="spBody">
+
+          <!-- 1. Company knowledge —— StoryChief 那种 8 个 tab 的形态 -->
+          <div class="sp-section hidden" data-section="company">
+
+            <div class="kn-tabs" role="tablist" aria-label="Company knowledge">
+              <button class="kn-tab is-on" type="button" role="tab" data-kntab="overview">Overview</button>
+              <button class="kn-tab" type="button" role="tab" data-kntab="general">General</button>
+              <button class="kn-tab" type="button" role="tab" data-kntab="audiences">Target audiences</button>
+              <button class="kn-tab" type="button" role="tab" data-kntab="pillars">Content pillars</button>
+              <button class="kn-tab" type="button" role="tab" data-kntab="voices">Brand voices</button>
+              <button class="kn-tab" type="button" role="tab" data-kntab="writing">Writing style</button>
+              <button class="kn-tab" type="button" role="tab" data-kntab="visual">Visual style</button>
+              <button class="kn-tab" type="button" role="tab" data-kntab="files">Knowledge files</button>
+            </div>
+
+            <!-- ============ Overview ============ -->
+            <div class="kn-pane" data-knpane="overview">
+              <h3 class="kn-h">Give your AI assistant the right company context</h3>
+              <p class="kn-sub">Company knowledge helps the assistant write, plan, and recommend from the same facts your team uses every day.</p>
+
+              <div class="kn-cards">
+                <div class="kn-card">
+                  <h4>Sharper recommendations</h4>
+                  <p>Audience, competitors, and positioning help AI suggest more relevant topics and angles.</p>
+                </div>
+                <div class="kn-card">
+                  <h4>More consistent writing</h4>
+                  <p>Brand voice and content pillars keep generated content closer to your preferred style.</p>
+                </div>
+                <div class="kn-card">
+                  <h4>Grounded in your sources</h4>
+                  <p>Knowledge files give AI access to your own documents when company context matters.</p>
+                </div>
+              </div>
+
+              <div class="kn-fresh">
+                <div class="kn-fresh-main">
+                  <h4>Fresh start</h4>
+                  <p>Let the assistant research your brand and fill in a first draft of this setup.</p>
+                </div>
+                <button id="btnFreshStart" class="btn btn-primary btn-small" type="button">Complete with AI</button>
+              </div>
+
+              <div class="kn-progress">
+                <div class="kn-prog-head">
+                  <span class="kn-prog-title">Setup progress</span>
+                  <span class="kn-prog-count"><span id="stKnDone">0</span>/<span id="stKnTotal">10</span> complete</span>
+                </div>
+                <div class="kn-bar"><i id="stKnBar"></i></div>
+                <div class="kn-setup" id="stBlocks"></div>
+              </div>
+            </div>
+
+            <!-- ============ General ============ -->
+            <div class="kn-pane hidden" data-knpane="general">
+              <div class="kn-block" data-knblock="website">
+                <div class="kn-block-head"><span class="kn-radio" aria-hidden="true"></span><h4>Website</h4></div>
+                <div class="form-grid two">
+                  <label class="field"><span>Website</span><input id="knWebsite" placeholder="https://www.esheep.ai/" /></label>
+                  <label class="field"><span>Company name</span><input id="knName" placeholder="eSheep.ai" /></label>
+                </div>
+              </div>
+
+              <div class="kn-block" data-knblock="description">
+                <div class="kn-block-head"><span class="kn-radio" aria-hidden="true"></span><h4>Company description</h4></div>
+                <label class="field"><textarea id="knDescription" rows="4" placeholder="Describe your business mission, values, and goals"></textarea></label>
+              </div>
+
+              <div class="kn-block" data-knblock="languages">
+                <div class="kn-block-head"><span class="kn-radio" aria-hidden="true"></span><h4>Languages</h4></div>
+                <div class="kn-langs" id="knLangList"></div>
+                <div class="kn-inline">
+                  <input id="knLangInput" class="input" placeholder="Ex. English, 中文" />
+                  <button id="btnAddLanguage" class="btn btn-small" type="button">Add language</button>
+                </div>
+              </div>
+
+              <div class="kn-block" data-knblock="competitors">
+                <div class="kn-block-head"><span class="kn-radio" aria-hidden="true"></span><h4>Competitor websites</h4></div>
+                <label class="field"><textarea id="knCompetitors" rows="3" placeholder="Add competitor websites"></textarea></label>
+                <p class="muted small">一行一个。写名字或域名都行（StoryChief / storychief.io）。</p>
+              </div>
+
+              <div class="kn-block" data-knblock="gsc">
+                <div class="kn-block-head">
+                  <span class="kn-radio" aria-hidden="true"></span>
+                  <h4>Google Search Console</h4>
+                  <span id="knGscState" class="pill pill-neutral">未接入</span>
+                  <span class="flex-1"></span>
+                  <button id="btnKnGsc" class="btn btn-small" type="button">Connect Google Search Console</button>
+                </div>
+                <p class="muted small" id="knGscHint">用你自己的 Google Cloud 凭据授权（只读 scope）。三步引导和回调地址在 Content audit 里。</p>
+              </div>
+
+              <div class="kn-block" data-knblock="custom">
+                <div class="kn-block-head"><span class="kn-radio" aria-hidden="true"></span><h4>Custom instructions <em class="kn-tag">Expert mode</em></h4></div>
+                <label class="field"><textarea id="knCustom" rows="4" placeholder="These instructions get sent to AI in all conversations"></textarea></label>
+              </div>
+
+              <div class="kn-block" data-knblock="proof">
+                <div class="kn-block-head"><span class="kn-radio" aria-hidden="true"></span><h4>Proof points <em class="kn-tag">可引用的事实</em></h4></div>
+                <label class="field"><textarea id="knProof" rows="3" placeholder="数字、客户、里程碑；没有就空着"></textarea></label>
+                <p class="muted small">一行一条。这些是 agent 写文案时可以直接引用的硬证据。</p>
+              </div>
+            </div>
+
+            <!-- ============ Target audiences ============ -->
+            <div class="kn-pane hidden" data-knpane="audiences">
+              <div class="kn-pane-head">
+                <div>
+                  <h4 class="kn-h4">Target audiences</h4>
+                  <p class="kn-sub">Who the content is for. Each audience carries its own profile, goals, and pain points, and the assistant reads all of it.</p>
+                </div>
+                <button id="btnAddAudience" class="btn btn-primary btn-small" type="button">Add target audience</button>
+              </div>
+              <div id="audienceList" class="entry-list"></div>
+            </div>
+
+            <!-- ============ Content pillars ============ -->
+            <div class="kn-pane hidden" data-knpane="pillars">
+              <div class="kn-pane-head">
+                <div>
+                  <h4 class="kn-h4">Content pillars</h4>
+                  <p class="kn-sub">The themes you keep coming back to. Each pillar holds its own search questions, what to write about, and what to stay away from.</p>
+                </div>
+                <button id="btnAddPillar" class="btn btn-primary btn-small" type="button">Add content pillar</button>
+              </div>
+              <div id="pillarList" class="entry-list"></div>
+            </div>
+
+            <!-- ============ Brand voices ============ -->
+            <div class="kn-pane hidden" data-knpane="voices">
+              <div class="kn-pane-head">
+                <div>
+                  <h4 class="kn-h4">Brand voices</h4>
+                  <p class="kn-sub">写出来的东西得像谁在说。可以有多条，按用途分开。</p>
+                </div>
+                <button id="btnAddVoice" class="btn btn-primary btn-small" type="button">Add brand voice</button>
+              </div>
+              <div id="voiceList" class="voice-list"></div>
+            </div>
+
+            <!-- ============ Writing style ============ -->
+            <div class="kn-pane hidden" data-knpane="writing">
+              <div class="kn-pane-head">
+                <div>
+                  <h4 class="kn-h4">Writing style</h4>
+                  <p class="kn-sub">句式、标点、大小写这些「怎么写」的规则。可以有多条，Blog / Twitter / YouTube 各一套。</p>
+                </div>
+                <button id="btnAddWriting" class="btn btn-primary btn-small" type="button">Add writing style</button>
+              </div>
+              <div id="writingList" class="entry-list"></div>
+            </div>
+
+            <!-- ============ Visual style ============ -->
+            <div class="kn-pane hidden" data-knpane="visual">
+              <div class="kn-pane-head">
+                <div>
+                  <h4 class="kn-h4">Visual style</h4>
+                  <p class="kn-sub">生成配图、封面、落地页时该长什么样。可以有多条，YouTube 封面 / 社媒配图 / 落地页各一套。</p>
+                </div>
+                <button id="btnAddVisual" class="btn btn-primary btn-small" type="button">Add visual style</button>
+              </div>
+              <div id="visualList" class="entry-list"></div>
+            </div>
+
+            <!-- ============ Knowledge files ============ -->
+            <div class="kn-pane hidden" data-knpane="files">
+              <div id="knFilesSlot">
+                <div class="kn-files-head">
+                  <div>
+                    <h4 class="kn-h4">Knowledge files</h4>
+                    <p class="kn-sub">Your content strategy, saved once. Every draft starts on-brand, on-topic, and aimed at the right people — without re-explaining your company in every chat.</p>
+                  </div>
+                  <button id="btnKnUpload" class="btn btn-primary btn-small" type="button">Upload files</button>
+                </div>
+
+                <div class="kn-cards kn-files-cards">
+                  <div class="kn-card">
+                    <div class="kn-card-ico" aria-hidden="true">★</div>
+                    <h5>Your unfair advantage</h5>
+                    <p>Your data, cases, and expertise make content nobody else can publish.</p>
+                  </div>
+                  <div class="kn-card">
+                    <div class="kn-card-ico" aria-hidden="true">🔒</div>
+                    <h5>Private to this workspace</h5>
+                    <p>Files stay scoped to this workspace, so knowledge never leaks across customers.</p>
+                  </div>
+                  <div class="kn-card">
+                    <div class="kn-card-ico" aria-hidden="true">⚡</div>
+                    <h5>Found when it matters</h5>
+                    <p>The right fact from the right document, pulled in exactly when a task needs it.</p>
+                  </div>
+                </div>
+
+                <div class="kn-files-bar">
+                  <input id="knFileSearch" class="kn-search" type="search" placeholder="Search inside your files..." aria-label="搜索知识文件">
+                  <span id="knFilesMeta" class="kn-sub">0 files</span>
+                </div>
+
+                <div id="knFilesEmpty" class="kn-empty-state">
+                  <div class="kn-empty-ico" aria-hidden="true">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h5"/></svg>
+                  </div>
+                  <p class="kn-empty-title">No knowledge files yet</p>
+                  <p class="kn-empty-copy">Upload internal documents — pricing, policies, product details, research, decks — that the assistant can search when it needs company-specific facts.</p>
+                  <p class="kn-hint">支持纯文本类文件（.md / .txt / .csv / .json / .html / .yml / .log / .tsv）。PDF、Word、PPT 请先导出成文本 —— 这里不假装能解析二进制。</p>
+                </div>
+
+                <div id="knFileList" class="kn-file-list"></div>
+                <div id="knFileHits" class="kn-file-list hidden"></div>
+              </div>
+              <input id="knFileInput" type="file" accept=".txt,.md,.markdown,.csv,.json,.html,.yml,.yaml,.log,.tsv" multiple class="file-input" />
+            </div>
+
+            <div class="kn-save">
+              <button id="btnSaveKnowledge" class="btn btn-primary btn-small" type="button">Save</button>
+              <span id="knPct" class="pill pill-neutral">0%</span>
+              <span id="knMissing" class="muted small"></span>
+            </div>
+          </div>
+
+          <!-- 2. Google Search Console -->
+          <div class="sp-section hidden" data-section="gsc">
+            <div class="form-grid two">
+              <label class="field"><span>站点</span><input id="gscSite" placeholder="esheep.ai" /></label>
+              <label class="field"><span>已导出的数据<em class="muted">可粘贴关键词表</em></span><textarea id="gscNote" rows="2" placeholder="例如：近 28 天 top 关键词与排名"></textarea></label>
+            </div>
+            <div class="row wrap">
+              <button id="btnSetupGsc" class="btn btn-primary btn-small">连接你的 Google 账号</button>
+              <button id="btnAuthorizeGsc" class="btn btn-primary btn-small hidden">用 Google 授权</button>
+              <button id="btnSyncGsc" class="btn btn-small hidden">同步最近 28 天</button>
+              <button id="btnDisconnectGsc" class="btn btn-small btn-quiet">断开</button>
+              <span id="gscPill" class="pill pill-neutral">未接入</span>
+              <span class="flex-1"></span>
+              <button id="btnGoAudit" class="btn btn-small">去 Strategy 做内容审计 →</button>
+            </div>
+            <p class="muted small" id="gscHint">用你自己的 Google Cloud 凭据授权（只读 scope），数据和账号都在你手里。授权要的三步在 Strategy → Content audit 里有说明和回调地址。</p>
+          </div>
+
+          <!-- 3. Connect your tools -->
+          <div class="sp-section hidden" data-section="tools">
+            <p class="muted small">装上 + 授权之后，agent 做判断时才会读它的数据。各家真实 OAuth 要逐个应用登记开发者应用（商务 / 审核），本地版把凭据存在本机，不做假的握手。</p>
+            <div id="toolList" class="app-grid"></div>
+            <div class="app-foot">
+              <button id="btnAddApp" class="btn btn-small" type="button">＋ 添加自定义应用</button>
+              <span class="flex-1"></span>
+              <span id="toolsPill" class="pill pill-neutral">0 个已授权</span>
+            </div>
+            <form id="plForm" class="plugin-form hidden" autocomplete="off">
+              <div class="form-grid">
+                <label class="field"><span>应用名</span><input id="plName" placeholder="内部数据仓库 / Ahrefs" /></label>
+                <label class="field"><span>地址<em class="muted">可选</em></span><input id="plUrl" placeholder="https://bi.example.com" /></label>
+                <label class="field"><span>它能提供什么<em class="muted">一句话</em></span><input id="plDesc" placeholder="关键词排名与搜索量" /></label>
+              </div>
+              <div class="row">
+                <button id="btnAddAppSave" class="btn btn-primary btn-small" type="submit">添加</button>
+                <button id="btnAddAppCancel" class="btn btn-small btn-quiet" type="button">取消</button>
+                <span class="muted small">自定义应用加完还要「授权」一次。</span>
+              </div>
+            </form>
+          </div>
+
+          <!-- 4. Knowledge files -->
+          <div class="sp-section hidden" data-section="files">
+            <div class="row wrap">
+              <input id="fileInput" type="file" accept=".txt,.md,.markdown,.csv,.json,.html,.yml,.yaml,.log,.tsv" multiple class="file-input" />
+              <span id="fileHint" class="muted small"></span>
+              <span id="filesPill" class="pill pill-neutral">0 个文件</span>
+            </div>
+            <p class="muted small">只支持纯文本类（.md / .txt / .csv / .json）。PDF、Word 请先导出成文本。</p>
+            <div id="fileList" class="file-list"></div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 聊天 -->
+      <section class="composer-card">
+        <div id="chatMessages" class="chat-messages"></div>
+        <div class="composer">
+          <textarea id="chatText" rows="2" placeholder="Ask to analyze your competitors"></textarea>
+          <button id="btnSendChat" class="btn-send" aria-label="发送">
+            <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 15.5V5M5.5 9.5 10 5l4.5 4.5"/></svg>
+          </button>
+        </div>
+        <div class="composer-foot">
+          <span class="tip" id="chatTip">Tip: use <kbd>+</kbd> to add files and context, <kbd>@</kbd> for plugins, or <kbd>$</kbd> for skills</span>
+          <span class="flex-1"></span>
+          <span id="chatSource" class="pill pill-neutral">离线模板</span>
+        </div>
+        <div class="chat-quick" id="chatQuick"></div>
+      </section>
+    </div>
+
+    <aside class="recent-chats">
+      <div class="rc-head">
+        <h2>Recent chats</h2>
+        <button id="btnNewChat" class="btn btn-icon btn-quiet" title="新建对话" aria-label="新建对话">
+          <svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M10 4.5v11M4.5 10h11"/></svg>
+        </button>
+      </div>
+      <div id="chatList" class="chat-list"></div>
+    </aside>
+
+  </div>
+</main>
+
+<!-- ==================== CONTENT ==================== -->
+<main class="page hidden" id="view-content">
+  <div class="cl-shell" id="contentList">
+    <aside class="cl-nav" aria-label="内容导航">
+      <div class="cl-nav-head">
+        <span class="cl-nav-title">Content</span>
+        <input id="clNavSearch" class="cl-nav-search" type="search" placeholder="Search" aria-label="搜索内容" />
+      </div>
+      <nav id="clNavTree" class="cl-tree"></nav>
+    </aside>
+
+    <section class="cl-main">
+      <div class="cl-toolbar">
+        <div class="cl-search-wrap">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="7" cy="7" r="4.6"/><path d="M10.4 10.4L14 14"/></svg>
+          <input id="clSearch" class="cl-quick" type="search" placeholder="Quick search" aria-label="快速搜索内容" />
+        </div>
+        <div class="cl-filter-wrap">
+          <button id="btnClFilter" class="btn btn-small" aria-haspopup="menu" aria-expanded="false">＋ Add filter</button>
+          <div id="clFilterMenu" class="cl-menu cl-filter-menu hidden" role="menu" aria-label="筛选条件"></div>
+        </div>
+        <div id="clChips" class="cl-chips"></div>
+        <span class="cl-grow"></span>
+        <div class="cl-pop-wrap">
+          <button id="btnClCreate" class="btn btn-primary btn-small" aria-haspopup="menu" aria-expanded="false">Create content
+            <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg>
+          </button>
+          <div id="clCreateMenu" class="cl-menu hidden" role="menu" aria-label="创建内容"></div>
+        </div>
+        <div class="cl-pop-wrap">
+          <button id="btnClColumns" class="btn btn-small" aria-haspopup="dialog" aria-expanded="false">Columns
+            <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg>
+          </button>
+          <div id="clColumnsPanel" class="cl-menu cl-columns hidden" role="dialog" aria-label="列配置"></div>
+        </div>
+      </div>
+
+      <div id="clEmpty" class="cl-empty hidden">
+        <p class="cl-empty-text">You don't have any content that meets the selected criteria.</p>
+        <button id="btnClEmptyCreate" class="btn btn-primary">Create content</button>
+      </div>
+
+      <div id="clTableWrap" class="cl-table-wrap hidden">
+        <table class="cl-table" id="clTable">
+          <thead id="clThead"></thead>
+          <tbody id="clTbody"></tbody>
+        </table>
+      </div>
+
+      <div id="clMedia" class="cl-media hidden"></div>
+
+      <div class="cl-foot">
+        <span id="clSelInfo" class="cl-foot-info"></span>
+        <span class="cl-grow"></span>
+        <button id="btnClPrev" class="btn btn-small" aria-label="上一页">Prev</button>
+        <span id="clRange" class="cl-range">1-0 of 0</span>
+        <button id="btnClNext" class="btn btn-small" aria-label="下一页">Next</button>
+      </div>
+    </section>
+  </div>
+
+  <div id="contentEditor" class="hidden">
+  <div class="shell">
+    <aside class="sidebar">
+      <button id="btnNew" class="btn btn-primary btn-block">＋ 新建 campaign</button>
+      <div class="sidebar-head">
+        <span>Campaign</span>
+        <span id="campaignCount" class="muted"></span>
+      </div>
+      <nav id="campaignList" class="brief-list"></nav>
+    </aside>
+
+    <section class="canvas">
+      <div id="emptyState" class="empty">
+        <svg viewBox="0 0 120 84" width="132" height="92" fill="none" aria-hidden="true">
+          <rect x="14" y="10" width="72" height="52" rx="7" fill="#eef3ff" stroke="#cddcff"/>
+          <rect x="24" y="22" width="40" height="4" rx="2" fill="#b9cdff"/>
+          <rect x="24" y="32" width="52" height="4" rx="2" fill="#d5e0ff"/>
+          <rect x="24" y="42" width="34" height="4" rx="2" fill="#d5e0ff"/>
+          <rect x="52" y="30" width="54" height="44" rx="7" fill="#fff" stroke="#e0e5ee"/>
+          <rect x="62" y="42" width="34" height="4" rx="2" fill="#e3e8f1"/>
+          <rect x="62" y="52" width="24" height="4" rx="2" fill="#eef1f6"/>
+        </svg>
+        <h2>从一个主张开始</h2>
+        <p class="muted">新建一个 campaign，把核心主张和原始素材填进去。<br />然后按渠道加资产、排上日期，一键生成草稿，改完存版本、批准。</p>
+      </div>
+
+      <div id="workspace" class="workspace hidden">
+        <div class="doc-head">
+          <button id="btnBackToList" class="btn btn-small cl-back" type="button">← 内容列表</button>
+          <div class="doc-meta" id="docMeta"></div>
+          <input id="fName" class="doc-title" placeholder="campaign 名称" aria-label="campaign 名称" />
+          <div class="doc-actions">
+            <button id="btnSaveMeta" class="btn">保存 campaign</button>
+            <span id="metaSaved" class="inline-ok"></span>
+            <span class="flex-1"></span>
+            <button id="btnDelete" class="btn btn-quiet" title="删除这个 campaign 及全部资产">删除</button>
+            <button id="btnGenAll" class="btn btn-primary">按渠道补齐并生成</button>
+          </div>
+        </div>
+
+        <details id="briefCard" class="card">
+          <summary class="disclosure">
+            <span>主张与简报</span>
+            <span class="muted small">目标、受众、调性、原始素材 —— 生成时全部喂进去</span>
+            <svg class="chev" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6l4 4 4-4"/></svg>
+          </summary>
+          <div class="brief-body">
+            <label class="field"><span>campaign 目标<em class="muted">想让读者看完做什么</em></span><input id="fObjective" placeholder="让出海 SaaS 创始人相信「一稿多改」是浪费时间" /></label>
+            <div class="form-grid">
+              <label class="field"><span>受众</span><input id="fAudience" placeholder="出海 SaaS 的增长负责人" /></label>
+              <label class="field"><span>语言</span><input id="fLanguage" placeholder="zh / en" /></label>
+              <label class="field"><span>调性</span><input id="fTone" placeholder="直接、具体、不装" /></label>
+              <label class="field"><span>行动号召</span><input id="fCta" placeholder="回复一句「怎么做」，我把模板发你" /></label>
+              <label class="field"><span>产品名</span><input id="fProduct" placeholder="eSheep.ai" /></label>
+              <label class="field"><span>署名</span><input id="fFrom" placeholder="Aiden" /></label>
+            </div>
+            <div class="form-grid two">
+              <label class="field"><span>核心主张<em class="muted">一行一条，写 1–3 条</em></span>
+                <textarea id="fPoints" rows="4" placeholder="同一主张换渠道，不是换产品"></textarea>
+              </label>
+              <label class="field"><span>原始素材<em class="muted">长文、转写稿、产品说明都行</em></span>
+                <textarea id="fRaw" rows="4" placeholder="粘得越全，适配质量越好"></textarea>
+              </label>
+            </div>
+          </div>
+        </details>
+
+        <div class="view-bar">
+          <span id="assetSummary" class="muted small"></span>
+          <span class="flex-1"></span>
+          <button id="btnAddAsset" class="btn btn-small">＋ 添加资产</button>
+        </div>
+
+        <div id="assetBoard" class="asset-board"></div>
+
+        <div class="card editor-card">
+          <div class="card-head">
+            <div class="card-title-group">
+              <div class="row">
+                <span id="assetTypeTag" class="type-tag">—</span>
+                <h2 id="chTitle">—</h2>
+              </div>
+              <p id="chBlurb" class="muted small"></p>
+            </div>
+            <div class="row">
+              <select id="variantSel" class="select" aria-label="变体">
+                <option value="A">变体 A</option>
+                <option value="B">变体 B</option>
+                <option value="C">变体 C</option>
+              </select>
+              <button id="btnGen" class="btn">生成</button>
+              <button id="btnSave" class="btn btn-primary">保存为新版本</button>
+            </div>
+          </div>
+          <div class="asset-line">
+            <label class="field field-inline"><span>资产标题</span><input id="fAssetTitle" placeholder="可选，例如「首发主稿」" /></label>
+            <label class="field field-inline"><span>排期</span><input id="fScheduled" type="date" /></label>
+            <button id="btnSaveAsset" class="btn btn-small">保存资产信息</button>
+            <span class="flex-1"></span>
+            <button id="btnDeleteAsset" class="btn btn-small btn-quiet">删除资产</button>
+          </div>
+          <textarea id="editor" class="editor" spellcheck="false" placeholder="选一个资产开始写作，或点「生成」拿一个草稿。⌘/Ctrl + S 保存为新版本。"></textarea>
+          <div class="editor-foot">
+            <span id="wordCount" class="muted small"></span>
+            <span id="dirtyFlag" class="dirty-flag hidden">未保存</span>
+          </div>
+        </div>
+
+        <div class="card gate-card">
+          <div class="card-head">
+            <div class="card-title-group">
+              <h2>质量门</h2>
+              <p class="muted small">每条规则都带出处；命中"必须"项的内容不建议发出去</p>
+            </div>
+            <div id="scorePill" class="score-pill">未校验</div>
+          </div>
+          <div id="checkList" class="check-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="rail">
+      <div class="card status-card">
+        <div class="status-row"><span class="muted small">资产</span><strong id="statusAsset">—</strong></div>
+        <div class="status-row"><span class="muted small">排期</span><strong id="statusScheduled">—</strong></div>
+        <div class="status-row"><span class="muted small">状态</span><span id="statusState" class="pill pill-neutral">—</span></div>
+        <div class="status-row"><span class="muted small">规则分</span><strong id="statusScore">—</strong></div>
+        <div class="status-row"><span class="muted small">版本</span><strong id="statusVersion">—</strong></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h2>版本时间线</h2><span id="versionHint" class="muted small"></span></div>
+        <div id="versionList" class="timeline"></div>
+        <div class="rail-actions">
+          <button id="btnApprove" class="btn btn-small">批准当前版本</button>
+          <button id="btnWinner" class="btn btn-small btn-quiet">标为赢家</button>
+        </div>
+      </div>
+
+      <details class="card" id="diffCard">
+        <summary class="disclosure">
+          <span>与上一版对比</span>
+          <span id="diffHint" class="muted small"></span>
+          <svg class="chev" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6l4 4 4-4"/></svg>
+        </summary>
+        <pre id="diffView" class="diff">—</pre>
+      </details>
+    </aside>
+  </div>
+</main>
+
+<!-- ==================== PLANNING ==================== -->
+<main class="page hidden" id="view-planning">
+  <div class="dash-shell single">
+    <div class="page-head">
+      <div>
+        <h1>Planning</h1>
+        <p class="muted small">campaign 的资产按日期排在这里。点空格子直接加资产，点资产跳去编辑。</p>
+      </div>
+      <div class="row">
+        <select id="planCampaign" class="select"></select>
+      </div>
+    </div>
+    <div class="card cal-card">
+      <div class="cal-head">
+        <button id="calPrev" class="btn btn-icon" aria-label="上个月">‹</button>
+        <strong id="calTitle">—</strong>
+        <button id="calNext" class="btn btn-icon" aria-label="下个月">›</button>
+        <button id="calToday" class="btn btn-small">今天</button>
+        <span class="flex-1"></span>
+        <span id="calLegend" class="legend"></span>
+      </div>
+      <div id="calUnscheduled" class="cal-unscheduled"></div>
+      <div class="cal-weekhead"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div>
+      <div id="calGrid" class="cal-grid"></div>
+    </div>
+  </div>
+</main>
+
+<!-- ==================== STRATEGY / REPORT ==================== -->
+<main class="page hidden" id="view-strategy">
+  <div class="strategy-shell">
+    <aside class="st-rail">
+      <div class="st-rail-title">Strategy</div>
+      <button class="st-item is-active" data-st="chat">
+        <svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3.5 4.5h13v9h-7l-3.5 3v-3h-2.5z"/></svg>
+        <span>New chat</span>
+      </button>
+      <button class="st-item" data-st="audit">
+        <svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="9" r="5.2"/><path d="M13 13l4 4"/></svg>
+        <span>Content audit</span><em class="st-badge" id="stAuditBadge"></em>
+      </button>
+      <button class="st-item" data-st="knowledge">
+        <svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4.5h6l6 3v8a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M4 8h12"/></svg>
+        <span>Company knowledge</span>
+      </button>
+      <button class="st-item" data-st="plugins">
+        <svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 3v3M13 3v3M7 14v3M13 14v3M3 7h3M3 13h3M14 7h3M14 13h3"/><rect x="7" y="7" width="6" height="6" rx="1.4"/></svg>
+        <span>Plugins &amp; skills</span>
+      </button>
+      <div class="st-rail-foot" id="stReady"></div>
+    </aside>
+
+    <section class="st-body">
+
+      <!-- 1. New chat -->
+      <div class="st-panel" id="stPanel-chat">
+        <div class="st-head">
+          <div>
+            <h1>New chat</h1>
+            <p class="muted small">和 Dashboard 的对话是**同一份记录**：在这边发过的，Dashboard 右侧 Recent chats 里也在。</p>
+          </div>
+          <div class="row">
+            <select id="stChatSelect" class="select" aria-label="历史对话"></select>
+            <button id="stNewChat" class="btn btn-small">＋ 新建</button>
+            <span id="stChatSource" class="pill pill-neutral">离线模板</span>
+          </div>
+        </div>
+        <div class="card st-chat-card">
+          <div id="stMessages" class="chat-messages"></div>
+          <div class="composer">
+            <textarea id="stChatText" rows="2" placeholder="Ask to research, audit or plan…"></textarea>
+            <button id="stSend" class="btn-send" aria-label="发送">
+              <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 15.5V5M5.5 9.5 10 5l4.5 4.5"/></svg>
+            </button>
+          </div>
+          <div class="composer-foot">
+            <span class="tip">Tip: use <kbd>@</kbd> to run a skill · <kbd>Enter</kbd> 发送 · <kbd>Shift</kbd>+<kbd>Enter</kbd> 换行</span>
+          </div>
+          <div class="chat-quick" id="stQuick"></div>
+        </div>
+      </div>
+
+      <!-- 2. Content audit -->
+      <div class="st-panel hidden" id="stPanel-audit">
+        <div class="st-head">
+          <div>
+            <h1>Content audit</h1>
+            <p class="muted small">拿 Search Console 的真实搜索数据，找出哪些页面该修、哪些主题该新写。分析是确定性的，阈值写在下面。</p>
+          </div>
+          <span id="stGscPill" class="pill pill-neutral">未接入</span>
+        </div>
+
+        <div class="card gsc-card">
+          <div class="gsc-head">
+            <span class="app-logo" style="background:#e8f0fe;color:#1a73e8" aria-hidden="true"><svg viewBox="0 0 32 32" width="34" height="34"><text x="16" y="21" text-anchor="middle" font-size="10" font-weight="700" fill="currentColor" font-family="Inter,system-ui,sans-serif">GSC</text></svg></span>
+            <div class="gsc-head-main">
+              <div class="gsc-title">Google Search Console</div>
+              <div class="gsc-sub" id="stGscSub">用你自己的 Google 账号授权，数据直连。</div>
+            </div>
+            <div class="row wrap">
+              <button id="stGscSetup" class="btn btn-small" type="button">开始接入</button>
+              <button id="stGscAuth" class="btn btn-small btn-primary hidden" type="button">用 Google 授权</button>
+              <button id="stGscSync" class="btn btn-small btn-primary hidden" type="button">同步最近 28 天</button>
+              <button id="stGscDisconnect" class="btn btn-small btn-quiet hidden" type="button">断开</button>
+            </div>
+          </div>
+
+          <div id="stGscSteps" class="gsc-steps hidden">
+            <ol class="gsc-ol">
+              <li>打开 <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener">Google Cloud → 凭据</a>，建一个 OAuth 客户端，类型选 <strong>Web 应用</strong>；并在「API 库」里启用 <strong>Search Console API</strong>。</li>
+              <li>把下面这个地址粘进「已获授权的重定向 URI」，保存后把 Client ID / Secret 填到下面。</li>
+            </ol>
+            <div class="gsc-uri">
+              <code id="stGscUri">http://127.0.0.1:4319/api/gsc/callback</code>
+              <button id="stGscCopy" class="btn btn-small btn-quiet" type="button">复制</button>
+            </div>
+            <div class="form-grid two">
+              <label class="field"><span>Client ID</span><input id="stGscId" placeholder="1234567890-abc.apps.googleusercontent.com" /></label>
+              <label class="field"><span>Client Secret</span><input id="stGscSecret" type="password" placeholder="GOCSPX-…" /></label>
+            </div>
+            <div class="row">
+              <button id="stGscSaveCreds" class="btn btn-primary btn-small" type="button">保存凭据</button>
+              <span class="muted small">只存在本机 data/gsc.json，不会上传。</span>
+            </div>
+          </div>
+
+          <div id="stGscReady" class="gsc-ready hidden">
+            <div class="form-grid two">
+              <label class="field"><span>站点<em class="muted">从你账号拉到的，也可以手填</em></span>
+                <input id="stGscSite" list="stGscSiteList" placeholder="https://esheep.ai/" />
+                <datalist id="stGscSiteList"></datalist>
+              </label>
+              <label class="field"><span>已授权账号</span><input id="stGscAccount" readonly placeholder="—" /></label>
+            </div>
+            <p class="muted small" id="stGscNotice"></p>
+          </div>
+
+          <div class="row wrap gsc-foot">
+            <span id="stImportAt" class="muted small"></span>
+            <span class="flex-1"></span>
+            <button id="stPasteToggle" class="btn btn-small btn-quiet" type="button">手动粘贴导出</button>
+          </div>
+
+          <div id="stPaste" class="gsc-paste hidden">
+            <p class="muted small">Search Console →「效果」→「查询」，把整张表复制进来（制表符 / CSV 都行，中英文表头都认）。</p>
+            <textarea id="stAuditRaw" class="audit-raw" rows="7" spellcheck="false"
+              placeholder="Top queries	Clicks	Impressions	CTR	Position&#10;how to write a marketing brief	12	1800	0.67%	8"></textarea>
+            <div class="row wrap">
+              <button id="stAuditRun" class="btn btn-primary btn-small" type="button">分析这张表</button>
+              <button id="stAuditClear" class="btn btn-small btn-quiet" type="button">清空数据</button>
+              <span class="flex-1"></span>
+              <span class="muted small">阈值：第 11–20 名且展示 ≥50 → 临门一脚；前 10 名但 CTR&lt;2% → 改标题；21–50 名 → 内容太浅；&gt;50 名 → 没有内容</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="audit-summary" id="stAuditSummary"></div>
+        <div class="audit-list" id="stAuditList"></div>
+      </div>
+
+      <!-- 3. Company knowledge（8 个 tab 全在 Dashboard 那块的 DOM 里，这里只是挂载位） -->
+      <div class="st-panel hidden" id="stPanel-knowledge">
+        <div class="card st-kn-card">
+          <div id="stKnowledgeSlot"></div>
+        </div>
+      </div>
+
+      <!-- 4. Plugins & skills -->
+      <div class="st-panel hidden" id="stPanel-plugins">
+        <div class="st-head">
+          <div>
+            <h1>Plugins &amp; skills</h1>
+            <p class="muted small">Plugins 让 agent 读到外部数据；Skills 把一套固定流程存下来，对话里 <strong>@技能名</strong> 就能跑。</p>
+          </div>
+        </div>
+
+        <div class="st-sec-head">
+          <h3>Plugins</h3>
+          <span class="muted small">装 + 授权后，agent 才会读它。</span>
+        </div>
+        <div id="stToolsSlot"></div>
+
+        <div class="st-sec-head" style="margin-top:26px">
+          <h3>Skills</h3>
+          <span class="muted small">固定流程。写一次，以后 @ 名字就能复用。</span>
+          <span class="flex-1"></span>
+          <button id="btnNewSkill" class="btn btn-small" type="button">＋ 新建技能</button>
+        </div>
+        <div id="stSkills" class="skill-list"></div>
+        <form id="skillForm" class="card skill-form hidden">
+          <h4 id="skFormTitle">新建技能</h4>
+          <div class="form-grid">
+            <label class="field"><span>名字<em class="muted">对话里用 @名字 调用</em></span><input id="skName" placeholder="SaaS 竞品内容缺口分析" /></label>
+            <label class="field"><span>标签<em class="muted">逗号分隔</em></span><input id="skTags" placeholder="调研, 竞品" /></label>
+            <label class="field"><span>输出<em class="muted">期望产出</em></span><input id="skOutput" placeholder="5 个选题 + 依据" /></label>
+          </div>
+          <label class="field"><span>说明</span><input id="skDesc" placeholder="一句话说清什么时候用它" /></label>
+          <label class="field"><span>步骤<em class="muted">一行一步，会拼进 system prompt</em></span><textarea id="skSteps" rows="6" placeholder="1. 从知识库取竞品名单…&#10;2. 列出竞品在讲的 3 个主题…"></textarea></label>
+          <div class="row"><button class="btn btn-small btn-primary" type="submit">保存技能</button>
+            <button id="skCancel" class="btn btn-small" type="button">取消</button></div>
+        </form>
+      </div>
+    </section>
+  </div>
+  </div>
+</main>
+
+<!-- Report 模块：左侧二级侧边栏（AI VISIBILITY 等分组）+ 右侧内容区，由 /views/report.js 整块渲染 -->
+<main class="page hidden" id="view-report"></main>
+
+<!-- 添加资产 -->
+<div id="assetModal" class="modal hidden">
+  <div class="modal-card">
+    <h3>添加资产</h3>
+    <p class="muted small">一个 campaign 可以有多个同渠道资产。每个资产有自己的版本历史。</p>
+    <label class="field"><span>渠道</span><select id="aChannel" class="select"></select></label>
+    <label class="field"><span>资产标题<em class="muted">可选</em></span><input id="aTitle" placeholder="例如「首发主稿」" /></label>
+    <label class="field"><span>排期<em class="muted">留空 = 未排期</em></span><input id="aScheduled" type="date" /></label>
+    <div class="row">
+      <button id="btnCreateAsset" class="btn btn-primary">添加</button>
+      <button id="btnCancelAsset" class="btn">取消</button>
+      <span id="assetErr" class="inline-err"></span>
+    </div>
+  </div>
+</div>
+
+<!-- 接入模型 -->
+<div id="providerModal" class="modal hidden">
+  <div class="modal-card modal-wide">
+    <div class="row between">
+      <div>
+        <h3>接入你的 AI</h3>
+        <p class="muted small">支持任意 OpenAI / Anthropic 兼容接口（公司网关、个人 key、本地 ollama）。接上之后 agent 会用你的资料写东西，并直接存回 Content。</p>
+      </div>
+      <button id="btnCloseProviders" class="btn btn-icon btn-quiet" aria-label="关闭">✕</button>
+    </div>
+    <div class="row wrap pm-bar">
+      <span id="aiStatus" class="pill pill-neutral">未接入</span>
+      <span id="aiCalls" class="muted small"></span>
+      <span class="flex-1"></span>
+      <button id="btnAddProvider" class="btn btn-primary btn-small">＋ 接入模型</button>
+    </div>
+    <div id="providerList" class="provider-list"></div>
+
+    <form id="providerForm" class="provider-form hidden" autocomplete="off">
+      <div class="form-grid">
+        <label class="field"><span>名称</span><input id="pvName" placeholder="公司网关 / 我的 key / 本地 ollama" /></label>
+        <label class="field"><span>协议</span><select id="pvKind" class="select"></select></label>
+        <label class="field"><span>Base URL</span><input id="pvBase" placeholder="https://gateway.example.com" /></label>
+      </div>
+      <div class="form-grid">
+        <label class="field"><span>API Key<em class="muted">本地保存，不显示明文</em></span><input id="pvKey" type="password" placeholder="sk-..." /></label>
+        <label class="field"><span>模型<em class="muted">一行一个，可留空后拉取</em></span><textarea id="pvModels" rows="2" placeholder="deepseek-v4-pro&#10;deepseek-v4-flash"></textarea></label>
+        <label class="field"><span>默认模型</span><select id="pvModel" class="select"></select></label>
+      </div>
+      <div class="row">
+        <button id="btnSaveProvider" class="btn btn-primary btn-small" type="submit">保存</button>
+        <button id="btnCancelProvider" class="btn btn-small" type="button">取消</button>
+        <span id="pvErr" class="inline-err"></span>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- 设置 -->
+<div id="settingsModal" class="modal hidden">
+  <div class="modal-card">
+    <h3>生成设置</h3>
+    <p class="muted small">
+      Content 里生成草稿用的模型。默认「离线模板」：不联网、不花钱。
+      Agent 对话用的是顶部「接入模型」里选中的 provider。
+    </p>
+    <label class="field"><span>模式</span>
+      <select id="sMode" class="select">
+        <option value="template">template · 离线模板</option>
+        <option value="gateway">gateway · Anthropic Messages 兼容</option>
+        <option value="openai">openai · Chat Completions 兼容</option>
+      </select>
+    </label>
+    <label class="field"><span>Base URL</span><input id="sBase" placeholder="https://your-gateway.example.com" /></label>
+    <label class="field"><span>Model</span><input id="sModel" placeholder="claude-sonnet-4 / gpt-4o-mini" /></label>
+    <label class="field"><span>Token<em class="muted">留空 = 保持已有</em></span><input id="sToken" type="password" placeholder="••••••••" /></label>
+    <label class="field"><span>品牌禁用词<em class="muted">英文逗号分隔</em></span><textarea id="sBanned" rows="3"></textarea></label>
+    <div class="row">
+      <button id="btnSaveSettings" class="btn btn-primary">保存</button>
+      <button id="btnCloseSettings" class="btn">关闭</button>
+      <span id="settingsSaved" class="inline-ok"></span>
+    </div>
+  </div>
+</div>
+
+
+<!-- 应用授权 -->
+<div id="toolModal" class="modal hidden">
+  <div class="modal-card">
+    <div class="modal-head-row">
+      <span class="app-logo" id="toolModalLogo" aria-hidden="true"></span>
+      <div class="grow">
+        <h3 id="toolModalName">授权应用</h3>
+        <p class="muted small" id="toolModalDesc"></p>
+      </div>
+      <button id="btnCloseToolModal" class="btn btn-icon btn-quiet" aria-label="关闭">✕</button>
+    </div>
+    <p class="muted small" id="toolModalWhy"></p>
+    <div class="form-grid two">
+      <label class="field"><span>账号 / 工作区<em class="muted">可留空</em></span><input id="toolAccount" placeholder="team@yourco.com" /></label>
+      <label class="field"><span>API key / 令牌<em class="muted">只存本机</em></span><input id="toolToken" type="password" placeholder="粘贴后不回显" /></label>
+    </div>
+    <label class="field"><span>顺便贴一段导出数据<em class="muted">可留空，agent 会读</em></span><textarea id="toolData" rows="3" placeholder="近 28 天关键词 / 花费 / 线索…"></textarea></label>
+    <label class="check-row"><input type="checkbox" id="toolSkipToken" /> <span>先只登记账号，凭据以后再加</span></label>
+    <p id="toolErr" class="inline-err"></p>
+    <div class="row">
+      <button id="btnToolSave" class="btn btn-primary btn-small" type="button">授权并保存</button>
+      <button id="btnToolCancel" class="btn btn-small" type="button">取消</button>
+    </div>
+  </div>
+</div>
+
+  <!-- Target audience 弹窗（长弹窗：header 深蓝、body 可滚动、footer 固定） -->
+  <div class="modal hidden" id="audienceModal" role="dialog" aria-modal="true" aria-labelledby="audienceModalTitle">
+    <div class="kn-modal" role="document">
+      <div class="kn-modal-head">
+        <h3 id="audienceModalTitle">Create Target Audience</h3>
+        <button id="btnCloseAudienceModal" class="kn-modal-x" type="button" aria-label="关闭">✕</button>
+      </div>
+      <div class="kn-modal-body">
+        <label class="field"><span>Audience name <em>*</em></span><input id="taName" placeholder="Ex. Growth marketers at Series B SaaS" /></label>
+        <div class="kn-field">
+          <label class="kn-label" for="taDesc">Description <em>*</em></label>
+          <input id="taDesc" placeholder="Ex. Senior marketers at growing SaaS companies" />
+          <p class="kn-hint">A short summary so the assistant knows when this audience is relevant.</p>
+        </div>
+
+        <div class="kn-group-title">Audience profile</div>
+
+        <div class="kn-field">
+          <span class="kn-label">Industries</span>
+          <div id="taIndustries" class="row-list"></div>
+          <button id="btnAddIndustry" class="btn btn-small btn-quiet kn-add" type="button">Add industry</button>
+        </div>
+
+        <div class="kn-field">
+          <span class="kn-label">Job titles</span>
+          <div id="taJobTitles" class="row-list"></div>
+          <button id="btnAddJobTitle" class="btn btn-small btn-quiet kn-add" type="button">Add job title</button>
+        </div>
+
+        <div class="kn-field">
+          <label class="kn-label" for="taSize">Company size</label>
+          <input id="taSize" list="companySizeList" placeholder="Select or type company size..." />
+          <datalist id="companySizeList"></datalist>
+        </div>
+
+        <div class="kn-group-title">Needs and concerns</div>
+
+        <div class="kn-field">
+          <span class="kn-label">Goals</span>
+          <div id="taGoals" class="row-list"></div>
+          <button id="btnAddGoal" class="btn btn-small btn-quiet kn-add" type="button">Add goal</button>
+        </div>
+
+        <div class="kn-field">
+          <span class="kn-label">Pain points</span>
+          <div id="taPains" class="row-list"></div>
+          <button id="btnAddPain" class="btn btn-small btn-quiet kn-add" type="button">Add pain point</button>
+        </div>
+
+        <p id="taErr" class="form-err"></p>
+      </div>
+      <div class="kn-modal-foot">
+        <button id="btnAudienceCancel" class="btn btn-small" type="button">Cancel</button>
+        <button id="btnAudienceSave" class="btn btn-primary btn-small" type="button">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content pillar 弹窗 -->
+  <div class="modal hidden" id="pillarModal" role="dialog" aria-modal="true" aria-labelledby="pillarModalTitle">
+    <div class="kn-modal" role="document">
+      <div class="kn-modal-head">
+        <h3 id="pillarModalTitle">Create Content Pillar</h3>
+        <button id="btnClosePillarModal" class="kn-modal-x" type="button" aria-label="关闭">✕</button>
+      </div>
+      <div class="kn-modal-body">
+        <label class="field"><span>Pillar name <em>*</em></span><input id="cpName" placeholder="Ex. Technical SEO" /></label>
+        <div class="kn-field">
+          <label class="kn-label" for="cpDesc">Description <em>*</em></label>
+          <input id="cpDesc" placeholder="Ex. Educational content about technical SEO" />
+          <p class="kn-hint">A short summary of the topic or theme this pillar should own.</p>
+        </div>
+
+        <div class="kn-group-title">Strategy</div>
+
+        <div class="kn-field">
+          <span class="kn-label">Target audiences</span>
+          <div id="cpAudChips" class="chip-row"></div>
+          <select id="cpAudPick" class="select">
+            <option value="">Select audiences this pillar is for...</option>
+          </select>
+        </div>
+
+        <div class="kn-field">
+          <span class="kn-label">Search questions</span>
+          <div id="cpQuestions" class="row-list"></div>
+          <button id="btnAddQuestion" class="btn btn-small btn-quiet kn-add" type="button">Add search question</button>
+          <p class="kn-hint">Questions people search for that this pillar should answer. Do not add keyword volumes or rankings here.</p>
+        </div>
+
+        <div class="kn-group-title">Content guidance</div>
+
+        <div class="kn-field">
+          <span class="kn-label">Topics to include</span>
+          <div id="cpTopicsIn" class="row-list"></div>
+          <button id="btnAddTopicIn" class="btn btn-small btn-quiet kn-add" type="button">Add topic</button>
+          <p class="kn-hint">Subjects that belong inside this pillar.</p>
+        </div>
+
+        <div class="kn-field">
+          <span class="kn-label">Topics to avoid</span>
+          <div id="cpTopicsOut" class="row-list"></div>
+          <button id="btnAddTopicOut" class="btn btn-small btn-quiet kn-add" type="button">Add topic</button>
+          <p class="kn-hint">Subjects the assistant should stay away from for this pillar.</p>
+        </div>
+
+        <div class="kn-field">
+          <span class="kn-label">Core messages</span>
+          <div id="cpMessages" class="row-list"></div>
+          <button id="btnAddMessage" class="btn btn-small btn-quiet kn-add" type="button">Add message</button>
+          <p class="kn-hint">Ideas the company should repeat in this pillar.</p>
+        </div>
+
+        <p id="cpErr" class="form-err"></p>
+      </div>
+      <div class="kn-modal-foot">
+        <button id="btnPillarCancel" class="btn btn-small" type="button">Cancel</button>
+        <button id="btnPillarSave" class="btn btn-primary btn-small" type="button">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Visual style 弹窗（和其他四个同一套外形） -->
+  <div class="modal hidden" id="visualModal" role="dialog" aria-modal="true" aria-labelledby="visualModalTitle">
+    <div class="kn-modal" role="document">
+      <div class="kn-modal-head">
+        <h3 id="visualModalTitle">Create Visual Style</h3>
+        <button id="btnCloseVisualModal" class="kn-modal-x" type="button" aria-label="关闭">✕</button>
+      </div>
+      <div class="kn-modal-body">
+        <label class="field"><span>Name <em>*</em></span><input id="vsName" placeholder="Ex. Social visuals" /></label>
+
+        <div class="kn-field">
+          <label class="kn-label" for="vsGuide">Guidelines</label>
+          <textarea id="vsGuide" rows="4" placeholder="Ex. Clean, bright product photography on a neutral background. No text overlays, no stock-photo handshakes."></textarea>
+          <p class="kn-hint">Describe the look and feel images should have: composition, mood, lighting, what to avoid and use cases for when to use this visual style.</p>
+        </div>
+
+        <div class="kn-group-title">Color system</div>
+        <p class="kn-hint kn-group-hint">The brand colors that generated visuals should lean on.</p>
+        <div class="form-grid two">
+          <div class="kn-field">
+            <label class="kn-label" for="vsPrimary">Primary</label>
+            <div class="kn-color">
+              <input id="vsPrimary" type="text" placeholder="#000000" maxlength="7" />
+              <input id="vsPrimaryPick" type="color" aria-label="选择主色" value="#000000" />
+            </div>
+          </div>
+          <div class="kn-field">
+            <label class="kn-label" for="vsSecondary">Secondary</label>
+            <div class="kn-color">
+              <input id="vsSecondary" type="text" placeholder="#000000" maxlength="7" />
+              <input id="vsSecondaryPick" type="color" aria-label="选择辅助色" value="#000000" />
+            </div>
+          </div>
+        </div>
+
+        <div class="kn-group-title">Style references</div>
+        <p class="kn-hint kn-group-hint">Up to four images that show the style you want generated visuals to follow.</p>
+        <div class="up-row">
+          <button id="btnVsRefUpload" class="btn btn-small" type="button">Upload</button>
+          <div class="up-lib-wrap">
+            <button id="btnVsRefLib" class="btn btn-small btn-quiet" type="button" aria-expanded="false">Library ▾</button>
+            <div id="vsRefLib" class="up-lib hidden"></div>
+          </div>
+        </div>
+        <div id="vsRefs" class="thumb-grid"></div>
+        <p id="vsRefsLeft" class="kn-hint">4 of 4 left</p>
+
+        <div class="kn-group-title">Logos</div>
+        <p class="kn-hint kn-group-hint">The logos to use as watermark or when create landing pages. Add each version — dark, light, transparent — and describe when to use it.</p>
+        <div class="up-row">
+          <button id="btnVsLogoUpload" class="btn btn-small" type="button">Upload</button>
+          <div class="up-lib-wrap">
+            <button id="btnVsLogoLib" class="btn btn-small btn-quiet" type="button" aria-expanded="false">Library ▾</button>
+            <div id="vsLogoLib" class="up-lib hidden"></div>
+          </div>
+        </div>
+        <div id="vsLogos" class="thumb-grid"></div>
+        <p id="vsLogosLeft" class="kn-hint">4 of 4 left</p>
+
+        <p id="vsErr" class="form-err"></p>
+      </div>
+      <div class="kn-modal-foot">
+        <button id="btnVisualCancel" class="btn btn-small" type="button">Cancel</button>
+        <button id="btnVisualSave" class="btn btn-primary btn-small" type="button">Create</button>
+      </div>
+    </div>
+  </div>
+  <input id="vsImgInput" type="file" accept=".jpeg,.jpg,.png,.svg,image/jpeg,image/png,image/svg+xml" class="file-input" />
+
+  <!-- 知识文件查看 -->
+  <div class="modal hidden" id="fileView" role="dialog" aria-modal="true" aria-labelledby="fileViewTitle">
+    <div class="kn-modal" role="document">
+      <div class="kn-modal-head">
+        <h3 id="fileViewTitle">Preview</h3>
+        <button id="btnCloseFileView" class="kn-modal-x" type="button" aria-label="关闭">✕</button>
+      </div>
+      <div class="kn-modal-body">
+        <p id="fileViewMeta" class="kn-hint"></p>
+        <pre id="fileViewText" class="file-view-text"></pre>
+      </div>
+      <div class="kn-modal-foot">
+        <button id="btnFileViewClose" class="btn btn-small" type="button">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Writing style 弹窗（和其他三个同一套外形：深蓝 header / 滚动 body / 固定 footer） -->
+  <div class="modal hidden" id="writingModal" role="dialog" aria-modal="true" aria-labelledby="writingModalTitle">
+    <div class="kn-modal" role="document">
+      <div class="kn-modal-head">
+        <h3 id="writingModalTitle">Create Writing Style</h3>
+        <button id="btnCloseWritingModal" class="kn-modal-x" type="button" aria-label="关闭">✕</button>
+      </div>
+      <div class="kn-modal-body">
+        <label class="field"><span>Name <em>*</em></span><input id="wsName" placeholder="Ex. Blog articles" /></label>
+
+        <div id="wsBody"></div>
+
+        <div class="kn-field">
+          <label class="kn-label" for="wsNotes">Additional notes</label>
+          <input id="wsNotes" placeholder="Ex. 短句为主，先说结论；不堆形容词" />
+          <p class="kn-hint">Anything else the assistant should follow. These notes sit on top of the switches above.</p>
+        </div>
+
+        <p id="wsErr" class="form-err"></p>
+      </div>
+      <div class="kn-modal-foot">
+        <button id="btnWritingCancel" class="btn btn-small" type="button">Cancel</button>
+        <button id="btnWritingSave" class="btn btn-primary btn-small" type="button">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Brand voice 弹窗（和上面两个同一套外形） -->
+  <div class="modal hidden" id="voiceModal" role="dialog" aria-modal="true" aria-labelledby="voiceModalTitle">
+    <div class="kn-modal" role="document">
+      <div class="kn-modal-head">
+        <h3 id="voiceModalTitle">Create Brand Voice</h3>
+        <button id="btnCloseVoiceModal" class="kn-modal-x" type="button" aria-label="关闭">✕</button>
+      </div>
+      <div class="kn-modal-body">
+        <label class="field"><span>Name <em>*</em></span><input id="vName" placeholder="Ex. Confident expert" /></label>
+        <div class="kn-field">
+          <label class="kn-label" for="vDesc">Description</label>
+          <textarea id="vDesc" rows="4" placeholder="Write this as guidance for someone new to the brand. Start with how the voice sounds, explain what the writing usually does, and add what to do, what to avoid."></textarea>
+        </div>
+        <div class="kn-field">
+          <label class="kn-label" for="vUse">Use case</label>
+          <select id="vUse" class="select">
+            <option value="general">General</option>
+            <option value="blog">Blog posts</option>
+            <option value="social">Social media</option>
+            <option value="email">Email</option>
+            <option value="landing">Landing pages</option>
+          </select>
+        </div>
+        <div class="kn-field">
+          <span class="kn-label">Excerpts</span>
+          <div id="vExcerpts" class="row-list"></div>
+          <button id="btnAddExcerpt" class="btn btn-small btn-quiet kn-add" type="button">Add excerpt</button>
+        </div>
+        <p id="vErr" class="form-err"></p>
+      </div>
+      <div class="kn-modal-foot">
+        <button id="btnVoiceCancel" class="btn btn-small" type="button">Cancel</button>
+        <button id="btnVoiceSave" class="btn btn-primary btn-small" type="button">Create</button>
+      </div>
+    </div>
+  </div>
+
+<div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+<script src="/app.js"></script>
+
+<main class="page hidden" id="view-article">
+  <div class="ar-shell">
+    <header class="ar-head">
+      <div class="ar-head-left">
+        <button class="ar-icon" id="arClose" title="回到内容列表" aria-label="close">←</button>
+        <div class="ar-title-wrap">
+          <button class="ar-title" id="arTitleBtn" title="点一下改标题">Untitled article</button>
+          <span class="cl-pill cl-pill-draft" id="arStatusPill">Draft</span>
+          <button class="ar-caret" id="arStatusBtn" title="改状态" aria-label="status">▾</button>
+        </div>
+        <div class="ar-metrics">
+          <span class="ar-metric is-mute" id="arMSeo"><i class="ar-dot"></i>GEO &amp; SEO<b>—</b></span>
+          <span class="ar-metric is-mute" id="arMRead"><i class="ar-dot"></i>Readability<b>—</b></span>
+          <span class="ar-metric is-mute" id="arMGap"><i class="ar-dot"></i>Content Gap<b>—</b></span>
+        </div>
+      </div>
+      <nav class="ar-tabs" id="arTabs">
+        <button class="ar-tab is-on" data-artab="write">Write</button>
+        <button class="ar-tab" data-artab="settings">Settings</button>
+        <button class="ar-tab" data-artab="audience">Audience</button>
+      </nav>
+      <div class="ar-head-right">
+        <button class="ar-icon" id="arChat" title="Chat">✦</button>
+        <button class="ar-icon" id="arComments" title="评论">☰</button>
+        <button class="btn btn-small" id="arCollab">Collaborate</button>
+        <button class="btn btn-primary btn-small" id="arPublish">Publish</button>
+        <button class="ar-icon" id="arMore" title="更多">⋯</button>
+      </div>
+    </header>
+    <div class="ar-body">
+      <section class="ar-main" id="arMain"></section>
+      <aside class="ar-rail" id="arRail"></aside>
+    </div>
+  </div>
+</main>
+
+<!-- ===== Social post composer（对标 StoryChief: /content/segments/social-post）===== -->
+<main id="view-social-post" class="sp-page hidden">
+  <header class="sp-top">
+    <button class="sp-back" id="spBack" title="返回内容列表">←</button>
+    <span class="sp-pill" id="spStatus">Draft</span>
+    <span class="sp-saved" id="spSaved">Not saved yet</span>
+    <span class="sp-title" id="spTitle">Social post</span>
+    <div class="sp-top-right">
+      <button class="sp-ghost" id="spChat">Chat</button>
+      <button class="sp-ghost" id="spCollab">Collaborate</button>
+      <button class="sp-primary" id="spPublish" disabled>Publish</button>
+      <button class="sp-ghost sp-morebtn" id="spMore" aria-haspopup="menu" aria-expanded="false">⋮</button>
+    </div>
+    <div class="sp-menu hidden" id="spMoreMenu" role="menu"></div>
+  </header>
+
+  <div class="sp-shell">
+    <aside class="sp-side">
+      <h2 class="sp-side-title">Connected Social Channels</h2>
+      <p class="sp-side-hint">🔗 Connect your Buffer account first. Social accounts are managed inside Buffer.</p>
+      <div class="sp-expired hidden" id="spExpired">
+        <span>⚠️ Buffer connection expired. Reconnect Buffer.</span>
+        <button class="sp-primary sp-small" data-sp="connect" id="spReconnect">Reconnect Buffer</button>
+      </div>
+      <button class="sp-primary sp-wide" id="spConnect">Connect Buffer</button>
+      <div class="sp-search hidden" id="spSearchWrap">
+        <input id="spSearch" placeholder="Search channels" autocomplete="off">
+      </div>
+      <div class="sp-channels" id="spChannels"></div>
+      <p class="sp-side-foot">💡 To add new social accounts, go to your Buffer dashboard.</p>
+      <div class="sp-side-links hidden" id="spSideLinks">
+        <button class="sp-linkbtn" data-sp="refresh" id="spRefresh">Refresh channels</button>
+        <button class="sp-linkbtn" data-sp="disconnect" id="spDisconnect">Disconnect Buffer</button>
+      </div>
+    </aside>
+
+    <section class="sp-main">
+      <div class="sp-card" id="spCard">
+        <div class="sp-tabs">
+          <button class="sp-tab is-on" data-sptab="now">Publish now</button>
+          <button class="sp-tab" data-sptab="schedule">Schedule</button>
+        </div>
+        <div class="sp-note hidden" id="spLock">Connect Buffer to start drafting social posts</div>
+        <div class="sp-schedule hidden" id="spSchedule">
+          <input type="datetime-local" id="spWhen">
+          <span class="sp-utc">All times in UTC</span>
+        </div>
+        <div class="sp-editor">
+          <textarea id="spText" placeholder="Write your post or use AI to generate..."></textarea>
+          <div class="sp-tools">
+            <button class="sp-tool" id="spEmoji">😀 Emoji</button>
+            <button class="sp-tool" id="spAI">AI</button>
+            <label class="sp-toggle"><input type="checkbox" id="spCustomize"><span>Customize per channel</span></label>
+          </div>
+        </div>
+        <div class="sp-perchannel hidden" id="spPerChannel"></div>
+        <div class="sp-attach">
+          <div class="sp-attach-title">Add to your post</div>
+          <div class="sp-attach-row">
+            <button class="sp-attach-btn" data-spattach="article">Article</button>
+            <button class="sp-attach-btn" data-spattach="link">Link</button>
+            <button class="sp-attach-btn" data-spattach="media">Media</button>
+            <button class="sp-attach-btn" data-spattach="pdf">PDF</button>
+          </div>
+          <div class="sp-media hidden" id="spMediaBox"></div>
+        </div>
+        <a class="sp-help" id="spHelp" href="https://support.buffer.com/" target="_blank" rel="noopener">How to compose a social post</a>
+        <div class="sp-feedback hidden" id="spFeedback"></div>
+        <div class="sp-pop hidden" id="spPop"></div>
+      </div>
+    </section>
+  </div>
+  <input type="file" id="spFile" hidden>
+</main>
+
+<script src="/views/brand-icons.js"></script>
+<script src="/views/social-post.js"></script>
+<script src="/views/article.js"></script>
+<script src="/views/content-list.js"></script>
+<script src="/views/chat-ui.js"></script>
+<script src="/views/dashboard.js"></script>
+<script src="/views/planning.js"></script>
+<script src="/views/strategy.js"></script>
+<script src="/views/report.js"></script>
+</body>
+</html>
